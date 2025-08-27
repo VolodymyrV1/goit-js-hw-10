@@ -3,7 +3,11 @@ import "flatpickr/dist/flatpickr.min.css";
 
 
 const calendar = document.querySelector("#datetime-picker");
-const btnStart = document.querySelector("[data-start]")
+const btnStart = document.querySelector("[data-start]");
+const timerDays = document.querySelector("[data-days]");
+const timerHours = document.querySelector("[data-hours]");
+const timerMinutes = document.querySelector("[data-minutes]");
+const timerSeconds = document.querySelector("[data-seconds]");
 btnStart.disabled = true;
 let userSelectedDate = null;
 
@@ -29,49 +33,71 @@ const options = {
 flatpickr(calendar, options);
 
 btnStart.addEventListener("click", () => {
+  btnStart.disabled = true;
   const startTime = Date.now();
-  const a = userSelectedDate.getTime() - startTime;
-  console.log(startTime);
-  console.log(a);
+  let deltaTimeM = userSelectedDate.getTime() - startTime;
+  // const timeComponents = convertMs(deltaTime);
+  // console.log(timeComponents);
+
+
+  const intervalId = setInterval(() => {
+    deltaTimeM -= 1000;
+
+    const { days, hours, minutes, seconds } = convertMs(deltaTimeM);
+    // updateTimer({ days, hours, minutes, seconds });
+
+    // console.log(`${days}:${hours}:${minutes}:${seconds}`);
+    if (deltaTimeM <= 0) {
+      btnStart.disabled = false;
+      clearInterval(intervalId);
+    } else {
+      updateTimer({ days, hours, minutes, seconds });
+
+    }
   
-  // console.log(convertMs(a));
-  let c = a;
-
-  setInterval(() => {
-
-    c -= 1000;
-    console.log(convertMs(c));
     
 
   }, 1000);
 
   
-})
+});
+
+function updateTimer({ days, hours, minutes, seconds }) {
+  timerDays.textContent = `${days}`;
+  timerHours.textContent = `${hours}`;
+  timerMinutes.textContent = `${minutes}`;
+  timerSeconds.textContent = `${seconds}`;
+  
+}
 
 
-const timer = {
-  start () {
-    const startTime = Date.now();
+// const timer = {
+//   start () {
+//     const startTime = Date.now();
 
-    setInterval(() => {
-      const currentTime = Date.now();
-      const deltaTime = currentTime - startTime;
-      const timeComponents = convertMs(deltaTime);
-      // console.log(timeComponents);
+//     setInterval(() => {
+//       const currentTime = Date.now();
+//       const deltaTime = currentTime - startTime;
+
+
+//       const timeComponents = convertMs(deltaTime);
+//       // console.log(timeComponents);
       
 
 
-    }, 1000);
+//     }, 1000);
   
-},
+// },
+// };
+// timer.start();
+
+
+
+
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, "0");
 };
-timer.start();
-
-
-
-
-
-
 
 
 
@@ -85,13 +111,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
