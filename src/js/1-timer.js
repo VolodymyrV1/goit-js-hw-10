@@ -1,5 +1,8 @@
 import flatpickr from "flatpickr";
+import iziToast from "izitoast";
+import toastIcon from '../img/Group.svg'
 import "flatpickr/dist/flatpickr.min.css";
+import "izitoast/dist/css/iziToast.min.css";
 
 
 const calendar = document.querySelector("#datetime-picker");
@@ -23,8 +26,15 @@ const options = {
     userSelectedDate = selectedDates[0];
     
     if (selectedTime <= now) {
-      window.alert("Please choose a date in the future");
-    };
+      iziToast.error(
+        {
+          message: "Please choose a date in the future",
+          position: 'topRight',
+          backgroundColor: '#EF4040',
+          iconUrl: toastIcon,
+          messageColor: '#ffffff',
+        })
+       };
     btnStart.disabled = selectedTime <= now;
   
   },
@@ -34,21 +44,21 @@ flatpickr(calendar, options);
 
 btnStart.addEventListener("click", () => {
   btnStart.disabled = true;
-  const startTime = Date.now();
-  let deltaTimeM = userSelectedDate.getTime() - startTime;
-  // const timeComponents = convertMs(deltaTime);
-  // console.log(timeComponents);
+  calendar.disabled = true;
+   
 
 
   const intervalId = setInterval(() => {
-    deltaTimeM -= 1000;
+    const timeNow = Date.now()
+    let deltaTimeM = userSelectedDate.getTime() - timeNow;
+    
 
     const { days, hours, minutes, seconds } = convertMs(deltaTimeM);
-    // updateTimer({ days, hours, minutes, seconds });
+   
 
-    // console.log(`${days}:${hours}:${minutes}:${seconds}`);
     if (deltaTimeM <= 0) {
       btnStart.disabled = false;
+      calendar.disabled = false;
       clearInterval(intervalId);
     } else {
       updateTimer({ days, hours, minutes, seconds });
@@ -71,36 +81,10 @@ function updateTimer({ days, hours, minutes, seconds }) {
 }
 
 
-// const timer = {
-//   start () {
-//     const startTime = Date.now();
-
-//     setInterval(() => {
-//       const currentTime = Date.now();
-//       const deltaTime = currentTime - startTime;
-
-
-//       const timeComponents = convertMs(deltaTime);
-//       // console.log(timeComponents);
-      
-
-
-//     }, 1000);
-  
-// },
-// };
-// timer.start();
-
-
-
-
 
 function addLeadingZero(value) {
   return String(value).padStart(2, "0");
 };
-
-
-
 
 
 function convertMs(ms) {
@@ -122,6 +106,3 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
