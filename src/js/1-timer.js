@@ -53,15 +53,24 @@ btnStart.addEventListener("click", () => {
     let deltaTimeM = userSelectedDate.getTime() - timeNow;
     
 
-    const { days, hours, minutes, seconds } = convertMs(deltaTimeM);
-   
+    const time = convertMs(deltaTimeM);
+
 
     if (deltaTimeM <= 0) {
       btnStart.disabled = false;
       calendar.disabled = false;
       clearInterval(intervalId);
+      iziToast.success(
+        {
+          message: "Your timer has finished",
+          position: 'center',
+          backgroundColor: 'green',
+          iconColor: '#ffffff',
+          messageColor: '#ffffff',
+        }
+      )
     } else {
-      updateTimer({ days, hours, minutes, seconds });
+      updateTimer(time);
 
     }
   
