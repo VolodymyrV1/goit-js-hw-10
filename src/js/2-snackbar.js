@@ -15,7 +15,7 @@ function handlerSubmit(event) {
     const fielfildValue = form.elements.state.value;
   
 
-    const promis = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
         setTimeout(() => {
             if (fielfildValue === "fulfilled") {
                 resolve(delay);
@@ -25,7 +25,7 @@ function handlerSubmit(event) {
         }, delay);
 
     });
-    promis
+    promise
         .then((delay) => {
             showToast(`✅ Fulfilled promise in ${delay}ms`, 'green');
         })
@@ -33,6 +33,9 @@ function handlerSubmit(event) {
             showToast(`❌ Rejected promise in ${delay}ms`, 'red')
         })
     
+
+}
+
     function showToast(message, bgColor) {
         iziToast.show({
             message,
@@ -43,4 +46,3 @@ function handlerSubmit(event) {
         });
 
     };
-}
