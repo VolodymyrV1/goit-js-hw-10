@@ -31,7 +31,10 @@ function handlerSubmit(event) {
         })
         .catch((delay) => {
             showToast(`❌ Rejected promise in ${delay}ms`, 'red')
-        })
+        });
+
+    form.reset();
+
     
 
 }
