@@ -57,7 +57,6 @@ btnStart.addEventListener("click", () => {
 
 
     if (deltaTimeM <= 0) {
-      btnStart.disabled = false;
       calendar.disabled = false;
       clearInterval(intervalId);
       iziToast.success(
